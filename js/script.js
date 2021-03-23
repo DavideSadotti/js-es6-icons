@@ -110,6 +110,7 @@ const icons = [
     category: "animal"
   },
 ];
+const iconContainer = $('.icons');
 
 const colors = [
   'yellow',
@@ -124,7 +125,6 @@ icons.forEach((item, i) => {
     categories.push(item.category);
   }
 });
-console.log(categories);
 
 
 // Milestone 2
@@ -137,19 +137,48 @@ const iconsColored = icons.map((icon) => {
   return icon;
 });
 
-iconsColored.forEach((icon) => {
+stampaIcone(iconContainer, iconsColored);
 
-  const {name, family, prefix, category, color} = icon;
-
-  const html = `
-    <div>
-    <i class="${family} ${prefix}${name}" style="color: ${color}"></i>
-    <div class="title">${name}</div>
-    </div>
-  `
-  $('.icons').append(html);
-
-});
 
 // Milestone 3
 // Creiamo una select con i tipi di icone e usiamola per filtrare le icone
+const select = $('#type');
+
+categories.forEach((item) => {
+  const optionHtml = `
+    <option value="${item}">${item}</option>
+  `;
+
+  select.append(optionHtml);
+});
+
+select.change(function() {
+  const optionSelezionata = $(this).val();
+  let filtered = iconsColored.filter((icon) => {
+    return icon.category == optionSelezionata;
+  });
+
+  if(filtered.length == 0){
+    filtered = iconsColored;
+  }
+
+  stampaIcone(iconContainer, filtered);
+});
+
+function stampaIcone(container, icons){
+  container.html('');
+
+  icons.forEach((icon) => {
+
+    const {name, family, prefix, category, color} = icon;
+
+    const html = `
+      <div>
+      <i class="${family} ${prefix}${name}" style="color: ${color}"></i>
+      <div class="title">${name}</div>
+      </div>
+    `
+    container.append(html);
+
+  });
+}
